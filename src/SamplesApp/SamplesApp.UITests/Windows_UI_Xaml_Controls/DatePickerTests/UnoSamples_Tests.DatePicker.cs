@@ -17,7 +17,7 @@ namespace SamplesApp.UITests.Windows_UI_Xaml_Controls.DatePickerTests
 	{
 		[Test]
 		[AutoRetry]
-		[ActivePlatforms(Platform.iOS)] // Android is disabled https://github.com/unoplatform/uno/issues/1634
+		[ActivePlatforms(Platform.iOS, Platform.Android)] // DatePicker not supported on Wasm
 		public void DatePickerFlyout_HasDataContextTest()
 		{
 			Run("UITests.Shared.Windows_UI_Xaml_Controls.DatePicker.DatePicker_SampleContent", skipInitialScreenshot: true);
