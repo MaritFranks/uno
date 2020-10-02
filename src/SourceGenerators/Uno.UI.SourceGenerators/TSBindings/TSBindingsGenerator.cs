@@ -1,17 +1,25 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Uno.Extensions;
+using Uno.Roslyn;
+
+#if NETFRAMEWORK
 using Uno.SourceGeneration;
+#endif
 
 namespace Uno.UI.SourceGenerators.TSBindings
 {
-	class TSBindingsGenerator : SourceGenerator
+	[Generator]
+	class TSBindingsGenerator : ISourceGenerator
 	{
 		private string _bindingsPaths;
 		private string[] _sourceAssemblies;
@@ -28,11 +36,16 @@ namespace Uno.UI.SourceGenerators.TSBindings
 		private static INamedTypeSymbol _structLayoutSymbol;
 		private static INamedTypeSymbol _interopMessageSymbol;
 
-		public override void Execute(SourceGeneratorContext context)
+		public void Initialize(GeneratorInitializationContext context)
 		{
-			var project = context.GetProjectInstance();
-			_bindingsPaths = project.GetPropertyValue("TSBindingsPath")?.ToString();
-			_sourceAssemblies = project.GetItems("TSBindingAssemblySource").Select(s => s.EvaluatedInclude).ToArray();
+		}
+
+		public void Execute(GeneratorExecutionContext context)
+		{
+			DependenciesInitializer.Init(context);
+
+			_bindingsPaths = context.GetMSBuildPropertyValue("TSBindingsPath")?.ToString();
+			_sourceAssemblies = context.GetMSBuildItems("TSBindingAssemblySource").Select(i => i.Identity).ToArray();
 
 			if(!string.IsNullOrEmpty(_bindingsPaths))
 			{
@@ -127,13 +140,15 @@ namespace Uno.UI.SourceGenerators.TSBindings
 			}
 		}
 
-		private int GetStructPack(INamedTypeSymbol parametersType)
+		private int GetStructPack(ISymbol parametersType)
 		{
 			// https://github.com/dotnet/roslyn/blob/master/src/Compilers/Core/Portable/Symbols/TypeLayout.cs is not available.
 
-			if (parametersType.GetType().GetProperty("Layout", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic) is PropertyInfo info)
+			var actualSymbol = GetActualSymbol(parametersType);
+
+			if (actualSymbol.GetType().GetProperty("Layout", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic) is PropertyInfo info)
 			{
-				if (info.GetValue(parametersType) is object typeLayout)
+				if (info.GetValue(actualSymbol) is { } typeLayout)
 				{
 					if (typeLayout.GetType().GetProperty("Kind", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic) is PropertyInfo layoutKingProperty)
 					{
@@ -159,18 +174,38 @@ namespace Uno.UI.SourceGenerators.TSBindings
 		{
 			// https://github.com/dotnet/roslyn/blob/0610c79807fa59d0815f2b89e5283cf6d630b71e/src/Compilers/CSharp/Portable/Symbols/Metadata/PE/PEFieldSymbol.cs#L133 is not available.
 
-			if (fieldSymbol.GetType().GetProperty(
+			var actualSymbol = GetActualSymbol(fieldSymbol);
+
+			if (actualSymbol.GetType().GetProperty(
 				"IsMarshalledExplicitly",
 				System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic) is PropertyInfo info
 			)
 			{
-				if (info.GetValue(fieldSymbol) is bool isMarshalledExplicitly)
+				if (info.GetValue(actualSymbol) is bool isMarshalledExplicitly)
 				{
 					return isMarshalledExplicitly;
 				}
 			}
 
 			throw new InvalidOperationException($"Failed to IsMarshalledExplicitly, unknown roslyn internal structure");
+		}
+
+		/// <summary>
+		/// Reads the actual symbol as Roslyn 3.6+ wraps symbols and we need access to the original type properties.
+		/// </summary>
+		/// <param name="symbol"></param>
+		/// <returns></returns>
+		private object GetActualSymbol(ISymbol symbol)
+		{
+			if (symbol.GetType().GetProperty("UnderlyingSymbol", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic) is PropertyInfo info)
+			{
+				if (info.GetValue(symbol) is { } underlyingSymbol)
+				{
+					return underlyingSymbol;
+				}
+			}
+
+			return symbol;
 		}
 
 		private void GenerateMarshaler(INamedTypeSymbol parametersType, IndentedStringBuilder sb, int packValue)

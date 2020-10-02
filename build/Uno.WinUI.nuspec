@@ -22,7 +22,7 @@
 		<dependency id="Xamarin.AndroidX.AppCompat" version="1.1.0" />
 		<dependency id="Xamarin.AndroidX.RecyclerView" version="1.1.0" />
 		<dependency id="Xamarin.AndroidX.Fragment" version="1.1.0" />
-		<dependency id="Uno.SourceGenerationTasks" version="2.0.13" />
+		<dependency id="Uno.SourceGenerationTasks" version="3.0.0-dev.16" />
 		<dependency id="Uno.Core" version="2.0.0" />
 		<dependency id="Uno.Core.Build" version="2.0.0" />
 		<dependency id="Uno.Diagnostics.Eventing" version="1.0.4" />
@@ -33,7 +33,7 @@
 		<dependency id="Xamarin.AndroidX.Legacy.Support.V4" version="1.0.0" />
 		<dependency id="Xamarin.AndroidX.AppCompat" version="1.1.0" />
 		<dependency id="Xamarin.AndroidX.RecyclerView" version="1.1.0" />
-		<dependency id="Uno.SourceGenerationTasks" version="2.0.13" />
+		<dependency id="Uno.SourceGenerationTasks" version="3.0.0-dev.16" />
 		<dependency id="Uno.Core" version="2.0.0" />
 		<dependency id="Uno.Core.Build" version="2.0.0" />
 		<dependency id="Uno.Diagnostics.Eventing" version="1.0.4" />
@@ -41,7 +41,7 @@
 
 	  <!-- iOS -->
 	  <group targetFramework="xamarinios10">
-		<dependency id="Uno.SourceGenerationTasks" version="2.0.13" />
+		<dependency id="Uno.SourceGenerationTasks" version="3.0.0-dev.16" />
 		<dependency id="Uno.Core" version="2.0.0" />
 		<dependency id="Uno.Core.Build" version="2.0.0" />
 		<dependency id="Uno.Diagnostics.Eventing" version="1.0.4" />
@@ -49,7 +49,7 @@
 
       <!-- macOS -->
       <group targetFramework="xamarinmac20">
-        <dependency id="Uno.SourceGenerationTasks" version="2.0.13" />
+        <dependency id="Uno.SourceGenerationTasks" version="3.0.0-dev.16" />
         <dependency id="Uno.Core" version="2.0.0" />
         <dependency id="Uno.Core.Build" version="2.0.0" />
 		<dependency id="Uno.Diagnostics.Eventing" version="1.0.4" />
@@ -57,7 +57,7 @@
 
       <!-- .NET Standard 2.0 -->
       <group targetFramework="netstandard2.0">
-        <dependency id="Uno.SourceGenerationTasks" version="2.0.13" />
+        <dependency id="Uno.SourceGenerationTasks" version="3.0.0-dev.16" />
         <dependency id="Uno.Core" version="2.0.0" />
         <dependency id="Uno.Core.Build" version="2.0.0" />
         <dependency id="System.Numerics.Vectors" version="4.5.0" />
@@ -248,16 +248,28 @@
 	<file src="..\src\Uno.Analyzers\Bin\Release\Uno.Analyzers.dll" target="analyzers" />
 	<file src="..\src\Uno.Analyzers\Bin\Release\Uno.Analyzers.pdb" target="analyzers" />
 
-	<!-- Source generators -->
-	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Uno.UI.SourceGenerators.dll" target="tools" />
-	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Uno.Xaml.dll" target="tools" />
-	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Uno.Xaml.pdb" target="tools" />
-	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Uno.UI.SourceGenerators.pdb" target="tools" />
-	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Mono.Cecil*.dll" target="tools" />
-	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Mono.Cecil*.pdb" target="tools" />
-	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Microsoft.ApplicationInsights.dll" target="tools" />
-	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\System.Diagnostics.DiagnosticSource.dll" target="tools" />
-	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Microsoft.DotNet.PlatformAbstractions.dll" target="tools" />
+	<!-- Uno Source generators -->
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Uno.UI.SourceGenerators.dll" target="tools/uno-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Uno.Xaml.dll" target="tools/uno-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Uno.Xaml.pdb" target="tools/uno-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Uno.UI.SourceGenerators.pdb" target="tools/uno-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Mono.Cecil*.dll" target="tools/uno-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Mono.Cecil*.pdb" target="tools/uno-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Microsoft.ApplicationInsights.dll" target="tools/uno-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\System.Diagnostics.DiagnosticSource.dll" target="tools/uno-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Microsoft.DotNet.PlatformAbstractions.dll" target="tools/uno-sourcegen" />
+
+	<!-- Roslyn Source generators -->
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Uno.UI.SourceGenerators.dll" target="tools/roslyn-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Uno.Core.dll" target="tools/roslyn-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Uno.Xaml.dll" target="tools/roslyn-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Uno.Xaml.pdb" target="tools/roslyn-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Uno.UI.SourceGenerators.pdb" target="tools/roslyn-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Mono.Cecil*.dll" target="tools/roslyn-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Mono.Cecil*.pdb" target="tools/roslyn-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Microsoft.ApplicationInsights.dll" target="tools/roslyn-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\System.Diagnostics.DiagnosticSource.dll" target="tools/roslyn-sourcegen" />
+	<file src="..\src\SourceGenerators\Uno.UI.SourceGenerators\Bin\Release\Microsoft.DotNet.PlatformAbstractions.dll" target="tools/roslyn-sourcegen" />
 
 	<file src="..\src\SourceGenerators\Uno.UI.Tasks\Bin\Release\*.dll" target="buildTransitive\Uno.UI.Tasks" />
 	<file src="..\src\SourceGenerators\Uno.UI.Tasks\Bin\Release\*.pdb" target="buildTransitive\Uno.UI.Tasks" />
