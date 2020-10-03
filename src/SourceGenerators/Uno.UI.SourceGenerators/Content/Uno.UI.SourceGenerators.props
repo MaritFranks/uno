@@ -271,6 +271,7 @@
 	<UnoSourceGeneratorAdditionalProperty Include="ExcludeXamlNamespacesProperty" />
 	<UnoSourceGeneratorAdditionalProperty Include="IncludeXamlNamespacesProperty" />
 	<UnoSourceGeneratorAdditionalProperty Include="XamlGeneratorAnalyzerSuppressionsProperty" />
+	<UnoSourceGeneratorAdditionalProperty Include="UnoUIUseRoslynSourceGenerators" />
   </ItemGroup>
 
   <Target Name="_FillSourceGeneratorItemGroups">
