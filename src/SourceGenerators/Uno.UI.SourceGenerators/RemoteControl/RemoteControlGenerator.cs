@@ -30,7 +30,8 @@ namespace Uno.UI.SourceGenerators.RemoteControl
 			DependenciesInitializer.Init(context);
 
 			if (
-				context.GetMSBuildPropertyValue("Configuration") == "Debug"
+				!DesignTimeHelper.IsDesignTime(context)
+				&& context.GetMSBuildPropertyValue("Configuration") == "Debug"
 				&& IsRemoteControlClientInstalled(context)
 				&& IsApplication(context))
 			{

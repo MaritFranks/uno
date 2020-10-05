@@ -22,10 +22,13 @@ namespace Uno.UI.SourceGenerators.NativeCtor
 
 		public void Execute(GeneratorExecutionContext context)
 		{
-			DependenciesInitializer.Init(context);
+			if (!DesignTimeHelper.IsDesignTime(context))
+			{
+				DependenciesInitializer.Init(context);
 
-			var visitor = new SerializationMethodsGenerator(context);
-			visitor.Visit(context.Compilation.SourceModule);
+				var visitor = new SerializationMethodsGenerator(context);
+				visitor.Visit(context.Compilation.SourceModule);
+			}
 		}
 
 		private class SerializationMethodsGenerator : SymbolVisitor

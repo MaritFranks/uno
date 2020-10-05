@@ -11,9 +11,11 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Uno.Extensions;
 using Uno.Roslyn;
+using Uno.UI.SourceGenerators.Helpers;
 
 #if NETFRAMEWORK
 using Uno.SourceGeneration;
+using Uno.UI.SourceGenerators.Helpers;
 #endif
 
 namespace Uno.UI.SourceGenerators.TSBindings
@@ -44,32 +46,35 @@ namespace Uno.UI.SourceGenerators.TSBindings
 		{
 			DependenciesInitializer.Init(context);
 
-			_bindingsPaths = context.GetMSBuildPropertyValue("TSBindingsPath")?.ToString();
-			_sourceAssemblies = context.GetMSBuildItems("TSBindingAssemblySource").Select(i => i.Identity).ToArray();
-
-			if(!string.IsNullOrEmpty(_bindingsPaths))
+			if (!DesignTimeHelper.IsDesignTime(context))
 			{
-				_stringSymbol = context.Compilation.GetTypeByMetadataName("System.String");
-				_intSymbol = context.Compilation.GetTypeByMetadataName("System.Int32");
-				_floatSymbol = context.Compilation.GetTypeByMetadataName("System.Single");
-				_doubleSymbol = context.Compilation.GetTypeByMetadataName("System.Double");
-				_byteSymbol = context.Compilation.GetTypeByMetadataName("System.Byte");
-				_shortSymbol = context.Compilation.GetTypeByMetadataName("System.Int16");
-				_intPtrSymbol = context.Compilation.GetTypeByMetadataName("System.IntPtr");
-				_boolSymbol = context.Compilation.GetTypeByMetadataName("System.Boolean");
-				_longSymbol = context.Compilation.GetTypeByMetadataName("System.Int64");
-				_structLayoutSymbol = context.Compilation.GetTypeByMetadataName(typeof(System.Runtime.InteropServices.StructLayoutAttribute).FullName);
-				_interopMessageSymbol = context.Compilation.GetTypeByMetadataName("Uno.Foundation.Interop.TSInteropMessageAttribute");
+				_bindingsPaths = context.GetMSBuildPropertyValue("TSBindingsPath")?.ToString();
+				_sourceAssemblies = context.GetMSBuildItems("TSBindingAssemblySource").Select(i => i.Identity).ToArray();
 
-				var modules = from ext in context.Compilation.ExternalReferences
-							  let sym = context.Compilation.GetAssemblyOrModuleSymbol(ext) as IAssemblySymbol
-							  where _sourceAssemblies.Contains(sym.Name)
-							  from module in sym.Modules
-							  select module;
+				if (!string.IsNullOrEmpty(_bindingsPaths))
+				{
+					_stringSymbol = context.Compilation.GetTypeByMetadataName("System.String");
+					_intSymbol = context.Compilation.GetTypeByMetadataName("System.Int32");
+					_floatSymbol = context.Compilation.GetTypeByMetadataName("System.Single");
+					_doubleSymbol = context.Compilation.GetTypeByMetadataName("System.Double");
+					_byteSymbol = context.Compilation.GetTypeByMetadataName("System.Byte");
+					_shortSymbol = context.Compilation.GetTypeByMetadataName("System.Int16");
+					_intPtrSymbol = context.Compilation.GetTypeByMetadataName("System.IntPtr");
+					_boolSymbol = context.Compilation.GetTypeByMetadataName("System.Boolean");
+					_longSymbol = context.Compilation.GetTypeByMetadataName("System.Int64");
+					_structLayoutSymbol = context.Compilation.GetTypeByMetadataName(typeof(System.Runtime.InteropServices.StructLayoutAttribute).FullName);
+					_interopMessageSymbol = context.Compilation.GetTypeByMetadataName("Uno.Foundation.Interop.TSInteropMessageAttribute");
 
-				modules = modules.Concat(context.Compilation.SourceModule);
+					var modules = from ext in context.Compilation.ExternalReferences
+								  let sym = context.Compilation.GetAssemblyOrModuleSymbol(ext) as IAssemblySymbol
+								  where _sourceAssemblies.Contains(sym.Name)
+								  from module in sym.Modules
+								  select module;
 
-				GenerateTSMarshallingLayouts(modules);
+					modules = modules.Concat(context.Compilation.SourceModule);
+
+					GenerateTSMarshallingLayouts(modules);
+				}
 			}
 		}
 

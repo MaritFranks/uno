@@ -28,7 +28,7 @@ namespace Uno.UI.SourceGenerators.XamlGenerator
 			DependenciesInitializer.Init(context);
 
 			// No initialization required for this one
-			// if(!Process.GetCurrentProcess().ProcessName.Equals("devenv", StringComparison.OrdinalIgnoreCase))
+			//if (!Process.GetCurrentProcess().ProcessName.Equals("devenv", StringComparison.OrdinalIgnoreCase))
 			{
 				// Debugger.Launch();
 			}

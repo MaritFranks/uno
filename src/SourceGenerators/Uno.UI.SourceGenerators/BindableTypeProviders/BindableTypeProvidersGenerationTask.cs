@@ -16,6 +16,7 @@ using Uno.Roslyn;
 using Uno.UI.SourceGenerators.XamlGenerator;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Reflection.Metadata.Ecma335;
+using Uno.UI.SourceGenerators.Helpers;
 
 #if NETFRAMEWORK
 using Uno.SourceGeneration;
@@ -57,7 +58,9 @@ namespace Uno.UI.SourceGenerators.BindableTypeProviders
 
 			try
 			{
-				if (PlatformHelper.IsValidPlatform(context))
+
+				if (PlatformHelper.IsValidPlatform(context)
+					&& !DesignTimeHelper.IsDesignTime(context))
 				{
 					if (IsApplication(context))
 					{
